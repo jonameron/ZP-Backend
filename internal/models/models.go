@@ -21,8 +21,8 @@ type User struct {
 	EventsAttended  int        `gorm:"default:0" json:"eventsAttended"`
 	Notes           string     `gorm:"type:text" json:"notes"`
 	AssignedEvents  []Event    `gorm:"many2many:event_users;" json:"-"`
-	Bookings        []Booking  `json:"-"`
-	ActivityLogs    []ActivityLog `json:"-"`
+	Bookings        []Booking  `gorm:"foreignKey:UserID" json:"-"`
+	ActivityLogs    []ActivityLog `gorm:"foreignKey:UserID" json:"-"`
 	CreatedAt       time.Time  `json:"createdAt"`
 	UpdatedAt       time.Time  `json:"updatedAt"`
 }
@@ -53,7 +53,7 @@ type Event struct {
 	CurationOrder         int       `gorm:"default:0" json:"curationOrder"`
 	RetailPrice           *float64  `json:"retailPrice"`
 	AssignedUsers         []User    `gorm:"many2many:event_users;" json:"-"`
-	Bookings              []Booking `json:"-"`
+	Bookings              []Booking `gorm:"foreignKey:EventID" json:"-"`
 	CreatedAt             time.Time `json:"createdAt"`
 	UpdatedAt             time.Time `json:"updatedAt"`
 }

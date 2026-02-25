@@ -32,14 +32,26 @@ func InitDatabase() (*gorm.DB, error) {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
-	// Auto-migrate schemas
-	err = db.AutoMigrate(
-		&models.User{},
-		&models.Event{},
-		&models.Booking{},
-		&models.ActivityLog{},
-		&models.OnboardingSubmission{},
-	)
+	// Auto-migrate schemas in correct order
+	// First create tables without foreign keys
+	err = db.AutoMigrate(&models.User{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate users: %w", err)
+	}
+	err = db.AutoMigrate(&models.Event{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate events: %w", err)
+	}
+	err = db.AutoMigrate(&models.OnboardingSubmission{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate onboarding: %w", err)
+	}
+	// Then create tables with foreign keys
+	err = db.AutoMigrate(&models.Booking{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate bookings: %w", err)
+	}
+	err = db.AutoMigrate(&models.ActivityLog{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to migrate database: %w", err)
 	}
