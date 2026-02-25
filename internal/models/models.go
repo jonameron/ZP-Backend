@@ -92,3 +92,26 @@ type ActivityLog struct {
 	User      User      `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE" json:"-"`
 	CreatedAt time.Time `json:"createdAt"`
 }
+
+// OnboardingSubmission represents a quiz submission from the onboarding flow
+type OnboardingSubmission struct {
+	ID                    uint      `gorm:"primaryKey" json:"id"`
+	SessionID             string    `gorm:"uniqueIndex;not null;size:255" json:"sessionId"`
+	Timestamp             time.Time `gorm:"index" json:"timestamp"`
+	Device                string    `gorm:"size:50" json:"device"`
+	SourceURL             string    `gorm:"size:500" json:"sourceUrl"`
+	NameParam             string    `gorm:"size:255" json:"nameParam"`
+	ContactPreference     string    `gorm:"size:50" json:"contactPreference"`
+	WeekdayVibe           string    `gorm:"size:50" json:"weekdayVibe"`
+	WeekendFlavor         string    `gorm:"size:50" json:"weekendFlavor"`
+	SocialStyle           string    `gorm:"size:50" json:"socialStyle"`
+	EnergyLevel           string    `gorm:"size:50" json:"energyLevel"`
+	Companionship         string    `gorm:"size:50" json:"companionship"`
+	CulturalPersonality   string    `gorm:"size:50" json:"culturalPersonality"`
+	CreativeEngagement    string    `gorm:"size:50" json:"creativeEngagement"`
+	Motto                 string    `gorm:"size:50" json:"motto"`
+	Language              string    `gorm:"size:50" json:"language"`
+	PilotValueExpectation string    `gorm:"size:50" json:"pilotValueExpectation"`
+	CreatedAt             time.Time `json:"createdAt"`
+	UpdatedAt             time.Time `json:"updatedAt"`
+}

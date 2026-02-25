@@ -33,12 +33,14 @@ func main() {
 	eventRepo := repository.NewEventRepository(db)
 	bookingRepo := repository.NewBookingRepository(db)
 	activityRepo := repository.NewActivityRepository(db)
+	onboardingRepo := repository.NewOnboardingRepository(db)
 
 	// Initialize services
 	eventService := services.NewEventService(eventRepo, userRepo)
 	bookingService := services.NewBookingService(bookingRepo, eventRepo, userRepo)
 	profileService := services.NewProfileService(userRepo, bookingRepo)
 	activityService := services.NewActivityService(activityRepo, userRepo)
+	onboardingService := services.NewOnboardingService(onboardingRepo)
 
 	// Initialize Fiber app
 	app := fiber.New(fiber.Config{
@@ -93,6 +95,10 @@ func main() {
 	// Activity logging
 	activityHandler := handlers.NewActivityHandler(activityService)
 	api.Post("/activity", activityHandler.LogActivity)
+
+	// Onboarding
+	onboardingHandler := handlers.NewOnboardingHandler(onboardingService)
+	api.Post("/onboarding", onboardingHandler.SubmitOnboarding)
 
 	// Start server
 	port := os.Getenv("PORT")

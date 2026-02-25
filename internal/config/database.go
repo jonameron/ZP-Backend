@@ -38,6 +38,7 @@ func InitDatabase() (*gorm.DB, error) {
 		&models.Event{},
 		&models.Booking{},
 		&models.ActivityLog{},
+		&models.OnboardingSubmission{},
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to migrate database: %w", err)

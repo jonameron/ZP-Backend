@@ -250,6 +250,36 @@ func (h *ActivityHandler) LogActivity(c *fiber.Ctx) error {
 	})
 }
 
+// OnboardingHandler handles onboarding quiz submission endpoints
+type OnboardingHandler struct {
+	onboardingService *services.OnboardingService
+}
+
+func NewOnboardingHandler(os *services.OnboardingService) *OnboardingHandler {
+	return &OnboardingHandler{onboardingService: os}
+}
+
+func (h *OnboardingHandler) SubmitOnboarding(c *fiber.Ctx) error {
+	var input services.OnboardingSubmissionInput
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid request body",
+		})
+	}
+
+	submission, err := h.onboardingService.SubmitOnboarding(input)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"status": "ok",
+		"id":     submission.SessionID,
+	})
+}
+
 // CustomErrorHandler handles application errors
 func CustomErrorHandler(c *fiber.Ctx, err error) error {
 	code := fiber.StatusInternalServerError
