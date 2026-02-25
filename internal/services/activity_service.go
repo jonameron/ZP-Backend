@@ -1,7 +1,6 @@
 package services
 
 import (
-	"strings"
 	"time"
 
 	"zeitpass/internal/models"
