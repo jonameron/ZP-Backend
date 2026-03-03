@@ -20,25 +20,18 @@ func NewActivityService(ar *repository.ActivityRepository, ur *repository.UserRe
 }
 
 type ActivityInput struct {
-	SessionID string `json:"SessionID"`
-	PageURL   string `json:"PageURL"`
-	EventID   string `json:"EventID"`
-	Action    string `json:"Action"`
-	Timestamp string `json:"Timestamp"`
-	Metadata  string `json:"Metadata"`
+	SessionID string `json:"sessionId"`
+	PageURL   string `json:"pageUrl"`
+	EventID   string `json:"eventId"`
+	Action    string `json:"action"`
+	Timestamp string `json:"timestamp"`
+	Metadata  string `json:"metadata"`
+	UserID    string `json:"-"` // Set from JWT context, not from request body
 }
 
 func (s *ActivityService) LogActivity(input ActivityInput) error {
-	// Extract UserID from SessionID (first 9 characters)
-	userIDStr := input.SessionID
-	if len(userIDStr) > 9 {
-		userIDStr = userIDStr[:9]
-	}
-
-	user, err := s.userRepo.FindByUserID(userIDStr)
+	user, err := s.userRepo.FindByUserID(input.UserID)
 	if err != nil {
-		// If user not found, still log activity but without user linkage
-		// For now, return error
 		return err
 	}
 

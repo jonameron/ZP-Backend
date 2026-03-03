@@ -22,3 +22,9 @@ func (r *OnboardingRepository) FindBySessionID(sessionID string) (*models.Onboar
 	err := r.db.Where("session_id = ?", sessionID).First(&submission).Error
 	return &submission, err
 }
+
+func (r *OnboardingRepository) FindByEmail(email string) (*models.OnboardingSubmission, error) {
+	var submission models.OnboardingSubmission
+	err := r.db.Where("email = ?", email).Order("created_at DESC").First(&submission).Error
+	return &submission, err
+}

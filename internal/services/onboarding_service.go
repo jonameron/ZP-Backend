@@ -54,6 +54,8 @@ type OnboardingSubmissionInput struct {
 	Timestamp string            `json:"timestamp" validate:"required"`
 	Device    string            `json:"device" validate:"required,oneof=desktop mobile tablet"`
 	SourceURL string            `json:"source_url"`
+	Name      string            `json:"name"`
+	Email     string            `json:"email"`
 	NameParam string            `json:"name_param"`
 	Answers   OnboardingAnswers `json:"answers" validate:"required"`
 }
@@ -69,6 +71,8 @@ func (s *OnboardingService) SubmitOnboarding(input OnboardingSubmissionInput) (*
 		Timestamp:             timestamp,
 		Device:                input.Device,
 		SourceURL:             input.SourceURL,
+		Name:                  input.Name,
+		Email:                 input.Email,
 		NameParam:             input.NameParam,
 		ContactPreference:     input.Answers.ContactPreference,
 		WeekdayVibe:           input.Answers.WeekdayVibe,

@@ -55,6 +55,38 @@ func InitDatabase() (*gorm.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to migrate database: %w", err)
 	}
+	err = db.AutoMigrate(&models.MagicLinkToken{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate magic_link_tokens: %w", err)
+	}
+	err = db.AutoMigrate(&models.EventUser{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate event_users: %w", err)
+	}
+	err = db.AutoMigrate(&models.Reaction{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate reactions: %w", err)
+	}
+	err = db.AutoMigrate(&models.UserVibe{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate user_vibes: %w", err)
+	}
+	err = db.AutoMigrate(&models.Invite{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate invites: %w", err)
+	}
+	err = db.AutoMigrate(&models.Connection{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate connections: %w", err)
+	}
+	err = db.AutoMigrate(&models.UserBadge{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate user_badges: %w", err)
+	}
+	err = db.AutoMigrate(&models.NotificationLog{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to migrate notification_logs: %w", err)
+	}
 
 	log.Println("Database connected and migrated successfully")
 	return db, nil

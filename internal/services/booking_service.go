@@ -26,6 +26,9 @@ type CreateBookingInput struct {
 	EventID      string `json:"EventID"`
 	Status       string `json:"Status"`
 	RequestNotes string `json:"RequestNotes"`
+	GuestName    string `json:"GuestName"`
+	GuestEmail   string `json:"GuestEmail"`
+	IsMystery    bool   `json:"IsMystery"`
 }
 
 func (s *BookingService) CreateBooking(input CreateBookingInput) (*models.Booking, error) {
@@ -44,6 +47,9 @@ func (s *BookingService) CreateBooking(input CreateBookingInput) (*models.Bookin
 		EventID:      event.ID,
 		Status:       input.Status,
 		RequestNotes: input.RequestNotes,
+		GuestName:    input.GuestName,
+		GuestEmail:   input.GuestEmail,
+		IsMystery:    input.IsMystery,
 	}
 
 	if err := s.bookingRepo.Create(booking); err != nil {
@@ -51,6 +57,31 @@ func (s *BookingService) CreateBooking(input CreateBookingInput) (*models.Bookin
 	}
 
 	return booking, nil
+}
+
+func (s *BookingService) CancelBooking(bookingID string, userID string) error {
+	user, err := s.userRepo.FindByUserID(userID)
+	if err != nil {
+		return errors.New("user not found")
+	}
+
+	booking, err := s.bookingRepo.FindByBookingID(bookingID)
+	if err != nil {
+		return errors.New("booking not found")
+	}
+
+	// Verify ownership
+	if booking.UserID != user.ID {
+		return errors.New("not your booking")
+	}
+
+	// Only allow cancellation of Requested or Confirmed bookings
+	if booking.Status != "Requested" && booking.Status != "Confirmed" {
+		return errors.New("booking cannot be cancelled in its current state")
+	}
+
+	booking.Status = "Cancelled"
+	return s.bookingRepo.Update(booking)
 }
 
 type FeedbackInput struct {

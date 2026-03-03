@@ -5,6 +5,11 @@
 *.so
 *.dylib
 zeitpass-api
+zeitpass-crawler
+zeitpass-cre
+zeitpass-scheduler
+/api
+/crawler
 tmp/
 
 # Test binary, built with `go test -c`
